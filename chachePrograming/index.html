@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Information Form</title>
+</head>
+<body>
+    <h1>Company Information Form</h1>
+    <!-- <form >
+        
+    </form> -->
+    <form id="form">
+        
+        <select name="storedUsers" id="storedUsers"> 
+            <option value="newuser">New User Details</option> 
+        </select> 
+        <br><br>
+
+        <label for="company-name">Company Name:</label>
+        <input type="text" id="company-name" name="company-name" required><br><br>
+        
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" rows="4" cols="50" required></textarea><br><br>
+        
+        <label for="gst-number">GST Number:</label>
+        <input type="number" id="gst-number" name="gst-number" required><br><br>
+        
+        <label for="pancard-number">PAN Number:</label>
+        <input type="number" id="pancard-number" name="pancard-number" required><br><br>
+        
+        <label for="emailId">Email ID:</label>
+        <input type="email" id="emailId" name="emailId" required><br><br>
+        
+        <label for="mobile-number">Mobile Number:</label>
+        <input type="tel" id="mobile-number" name="mobile-number" pattern="[0-9]{10}" required><br><br>
+        
+        <label for="account-number">Account Number:</label>
+        <input type="text" id="account-number" name="account-number" required><br><br>
+        
+        <label for="ifsc-code">IFSC Code:</label>
+        <input type="text" id="ifsc-code" name="ifsc-code" required><br><br>
+        
+        <label for="bank-name">Bank Name:</label>
+        <input type="text" id="bank-name" name="bank-name" required><br><br>
+        
+        <input id="submit" type="submit" value="Submit" />
+      <input id="saveInfo" type="submit" value="Save Info" />
+    </form>
+
+    <script>
+        const form = document.getElementById("form");
+        const saveInfo = document.getElementById("saveInfo");
+        let userDetails= {
+                companyName:"",
+                address:"",
+                gstNo:"",
+                panNo:"",
+                emailId:"",
+                mobileNo:"",
+                accountNumber:"",
+                ifscCode:"",
+                bankName:"",
+            }
+        let clientDetails= {}
+
+         //Function to get vaules from the html form tag
+         const getFormValues = ()=>{
+            let companyName = document.getElementById("company-name").value;
+            let address = document.getElementById("address").value;
+            let gstNo = document.getElementById("gst-number").value;
+            let panNo = document.getElementById("pancard-number").value;
+            let emailId = document.getElementById("emailId").value;
+            let mobileNo = document.getElementById("mobile-number").value;
+            let accountNumber = document.getElementById("account-number").value;
+            let ifscCode = document.getElementById("ifsc-code").value;
+            let bankName = document.getElementById("bank-name").value;
+            
+                userDetails = {
+                companyName,
+                address,
+                gstNo,
+                panNo,
+                emailId,
+                mobileNo,
+                accountNumber,
+                ifscCode,
+                bankName,
+            }
+        } 
+
+        //function for updating the form fields 
+        const updateForm = (obj) => {
+             document.getElementById("company-name").value = obj.companyName;
+             document.getElementById("address").value = obj.address;
+             document.getElementById("gst-number").value = obj.gstNo;
+             document.getElementById("pancard-number").value = obj.panNo;
+             document.getElementById("emailId").value = obj.emailId;
+             document.getElementById("mobile-number").value = obj.mobileNo;
+             document.getElementById("account-number").value = obj.accountNumber;
+             document.getElementById("ifsc-code").value = obj.ifscCode;
+             document.getElementById("bank-name").value = obj.bankName;
+        }
+
+        //Check if all the fields are valid or not
+        const hasAllFieldsNotEmpty =(obj)=> {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key) && !obj[key] && obj[key] === "") {
+                    // console.log("fail value fields are missing", key);
+                return false;
+
+                }
+            }
+            // console.log("success value fields are present");
+            return true;
+            }
+
+        //values of the html tags
+        form.addEventListener("submit",function(event){
+            event.preventDefault();
+            getFormValues();
+            // console.log(userDetails);
+            // form.reset(); //Reset the form data
+        });
+
+        saveInfo.addEventListener('click', function(event) {
+            event.preventDefault();
+            // getFormValues(); // get all the values from htnml form
+            // console.log(userDetails);
+            
+            let objIsOk = hasAllFieldsNotEmpty(userDetails); // check if all fields are present in htnml form
+            // console.log(objIsOk);
+            if (!objIsOk) {
+                getFormValues();// get all the values from htnml form
+                if(hasAllFieldsNotEmpty(userDetails)) {
+                objIsOk = !objIsOk; // now the details are fetched from htnml form we make the objOk true
+                // console.log(objIsOk);}
+                // else{
+                // console.log("details not found");
+                // }
+            } 
+        }
+            
+            if(Object.keys(userDetails).length!==0 && objIsOk){ //checking if the user details is empty or not
+                console.log("Details found");
+                localStorage.setItem(userDetails.companyName, JSON.stringify(userDetails));
+                // console.log( localStorage.getItem(userDetails.companyName));
+            } 
+            else{
+                console.log("Details not found");
+                alert("Please enter a company details first!");
+            }
+            // let tempData = jsonConverter(userDetails);
+            // console.log(tempData);
+            // form.reset(); //Reset the form data
+        });
+
+        // //fuction to convert data into json format
+        // const jsonConverter = (obj)=>{
+        //     return JSON.stringify(obj)
+        // };
+
+        // Get all the key from localStorage
+        function getAllStorageKeys() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                keys.push(key);
+            }
+            return keys;
+            }
+
+        const allKeys = getAllStorageKeys();
+        // console.log(allKeys); // This will log an array of all the keys in localStorage
+
+        //Display the user/compnay details if available in localStorage
+        let user = allKeys.length > 0 && allKeys || false; //This will store an array of all the keys in localStorage if exits other wise it will store an default value
+        // console.log(user); // This will log the key if there any
+
+        //Check for user/company details in localStorage
+        const storedUsers = document.getElementById("storedUsers"); //select tag reference
+        //Loop to add option in select tag to display the company details[name]
+        for (let i = 0; i < user.length && user != false; i++) {
+            // console.log(user[i]);
+            const option = document.createElement("option");
+            option.id = user[i].replace(/\s+/g, '');
+            option.value = user[i];
+            option.text = user[i];
+            storedUsers.appendChild(option);
+        }
+        // if there is no stored users data then make the display none of select tag
+        if(!user)storedUsers.style.display = "none";
+
+        //chect the user input value for select tag refering for new user or existing user
+        let selectTag = document.getElementById("storedUsers");
+        // console.log(selectTag.value);
+        selectTag.addEventListener("change",function(e) {
+            
+            if (selectTag.value !== "newuser") {
+             console.log("select item pushed into the form");
+             let keyValue = selectTag.value;
+            //  console.log(localStorage.getItem(keyValue));
+             const existedUser = JSON.parse(localStorage.getItem(keyValue)) //gettig value from localStorage and converting it into objext
+             console.log(existedUser);
+            //  companyName.value = existedUser.companyName;
+            // document.getElementById('company-name').value = existedUser.companyName
+            updateForm(existedUser)
+            }
+            
+        })
+
+       
+
+    </script>
+</body>
+</html>

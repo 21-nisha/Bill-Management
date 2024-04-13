@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="output.css">
+    <title>Simple Form</title>
+  </head>
+  <body class="m-5">
+    
+    <p class="bg-red-400 text-center text-6xl uppercase">Tax Invocie</p>
+    <form id="myForm">
+      <div class="w-[300px] mt-3">
+        <label for="productName" class="block text-lg font-medium leading-6 text-gray-900">Product-Name:</label>
+        <div class="relative mt-1 rounded-md shadow-sm">
+          <!-- <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="text-gray-500 sm:text-sm">$</span>
+          </div> -->
+          <input required
+          type="text"
+          id="productName"
+          name="productName"
+          placeholder="Enter Product-Name"class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">   
+        </div>
+      </div>
+
+      <!-- <label >Product-Name:</label>
+      <input
+        required
+        type="text"
+        id="productName"
+        name="productName"
+        placeholder="Enter Product-Name"
+      /> -->
+
+      <!-- <hr/> -->
+
+      <div class="w-[300px] mt-3">
+        <label for="hsn_code class="block text-lg font-medium leading-6 text-gray-900">HSN CODE:</label>
+        <div class="relative mt-1 rounded-md shadow-sm">
+          <!-- <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="text-gray-500 sm:text-sm">$</span>
+          </div> -->
+          <input 
+          required
+        type="number"
+        id="hsn_code"
+        name="hsn_code"
+        placeholder="Enter HSN-Code"
+        class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block  w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">   
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="w-[400px] mt-3 flex ">
+        <div class="relative mt-1 rounded-md shadow-sm justify-center items-center">
+          <label for="quantity" class="block text-lg font-medium  text-gray-900 m-auto">Quantity: </label>
+          <!-- <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="text-gray-500 sm:text-sm">$</span>
+          </div> -->
+          <input 
+          required
+        type="number"
+        step="0.001"
+        id="quantity"
+        name="quantity"
+        placeholder="Enter Quantity"
+        class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block  w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="0.00">   
+        </div>
+        <div class="justify-center self-end pb-2 ">
+
+          <!-- <label for="unit">Uint:</label> -->
+          <select  id="unit ">
+            <option value="kg" selected><p class="text-2xl">KG</p></option>
+            <option value="ton">Ton</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Quantity:</label>
+      <input
+        required
+        type="number"
+        step="0.001"
+        id="quantity"
+        name="quantity"
+        placeholder="Enter Quantity"
+
+      />
+      <hr />
+      <label>Price :</label>
+      <input
+        required
+        type="number"
+        step="0.001"
+        id="price"
+        name="price"
+        placeholder="Enter Price"
+      />
+      <hr />
+      <label for="unit">Uint:</label>
+      <select  id="unit">
+        <option value="kg" selected>KG</option>
+        <option value="ton">Ton</option>
+      </select>
+      <hr />
+
+      <label for="travelFee">Travel Fee :</label>
+      <input
+        type="number"
+        step="0.001"
+        id="travelFee"
+        name="travelFee"
+        placeholder="Enter travel fee"
+      />
+      <hr />
+    
+      <input id="submit" type="submit" value="Submit" />
+      <input id="calculate" type="submit" value="Calculate" />
+      
+    </form>
+
+    //contains the address of the page to be printed
+    <iframe src="index2.html" id="test_print" frameborder="0"></iframe>
+    
+    <button id="print" >print</button>
+
+    <script>
+      //js code here
+      const productDetails = []; // Array to store user info objects
+      let grandTotal = 0;
+      let totalAmount = 0;
+      let totalTravelFee = 0;
+      const form = document.getElementById("myForm");
+      const submit = document.getElementById('submit');
+      const calculate = document.getElementById('calculate');
+      var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
+      var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
+
+      function inWords (num) {
+          if ((num = num.toString()).length > 9) return 'overflow';
+          n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+          if (!n) return; var str = '';
+          str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+          str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+          str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+          str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+          str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only ' : '';
+          return str;
+      }
+
+
+      form.addEventListener("submit",  function (event) {
+        // Prevent default form submission behavior
+        event.preventDefault();
+
+        const productName = document.getElementById("productName").value;
+        let quantity = document.getElementById("quantity").value;
+        const price = document.getElementById("price").value;
+        const hsnCode = document.getElementById("hsn_code").value;
+        let travelFee = Number(document.getElementById("travelFee").value);
+        // console.log(travelFee);
+        const taxableAmount = price * quantity;
+        const unit = document.getElementById("unit").value;
+        console.log(unit);
+        //For unit based test code 
+        if (unit=="ton") quantity = quantity*1000;
+        console.log(quantity);
+
+        // Add product info to array
+        productDetails.push({
+          productName,
+          hsnCode,
+          quantity,
+          price,
+          taxableAmount,
+          travelFee,
+        });
+
+        // Clear form fields
+        form.reset();
+
+        console.table(productDetails); 
+      });
+
+
+      //Event listener for claculating data after been entered 
+      calculate.addEventListener("click", function (event){
+         // Prevent default form submission behavior
+         event.preventDefault();
+        //To get Total of taxable amount form the array 
+        productDetails.forEach(element => {
+          totalAmount += element.taxableAmount;
+          totalTravelFee += element.travelFee;
+          console.log(totalAmount, totalTravelFee);
+        });
+
+        let temp = totalAmount+ totalTravelFee;
+        const gst = temp * 0.18;
+        const sgst = gst / 2;
+        const cgst = gst / 2;
+        console.log(gst, sgst, cgst); 
+        //Round-off grand total value 
+        grandTotal =Math.ceil( gst+totalAmount+totalTravelFee);
+        console.log(" Grand Total: ", grandTotal)
+        
+        let roundOffValue = grandTotal-(gst+totalAmount+totalTravelFee);
+        console.log(roundOffValue);
+        //Grand Total value in words
+        const grandTotalValueInWords = inWords(grandTotal);
+        console.log(inWords(grandTotal));
+
+      });
+
+      //print functionalty
+      const print = document.getElementById('print');
+      const test = document.getElementById('test_print').contentWindow;
+      print.addEventListener('click',function(e){
+        // test.focus();
+        test.print(); 
+        console.log(test);
+      })
+
+
+
+    </script>
+  </body>
+</html>
+
+
+
+<!-- npx tailwind -i input.css -o output.css --watch -->
